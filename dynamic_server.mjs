@@ -7,7 +7,7 @@ import { default as sqlite3 } from 'sqlite3';
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
-const port = 8000;
+const port = 9000;
 const root = path.join(__dirname, 'public');
 const template = path.join(__dirname, 'templates');
 
@@ -28,7 +28,18 @@ const db = new sqlite3.Database(path.join(__dirname, 'songs.sqlite3'),
         }
     });
 
-    
+function dbSelect(query, params) {
+    return new Promise((resolve, reject) => {
+        db.all(query, params, (err, rows) => {
+            if (err) {
+                reject(err);
+            }
+            else {
+                resolve(rows);
+            }
+        });
+    });
+}
 
 app.get("", (req, res) => {
     let artists = new Set();
@@ -87,10 +98,32 @@ app.get("/artist/:name", (req, res) => {
 app.get("/dance/:score", (req, res) => {
     let score = req.params.score;
 });
-
+// START OF ACCESSING RELEASE YEAR TEMPLATE
 app.get("/year/:release", (req, res) => {
     let release = req.params.release;
+    let p1 = dbSelect('SELECT * FROM songs WHERE year = ?', [release]);
+    let p2 = fs.promises.readFile(path.join('templates', 'release_year.html'), 'utf-8');
+    Promise.all([p1, p2]).then((results) => {
+        let release_year = results[1][0].name;
+        let release_list = results[0];
+        let response = results[1].replace('$$RELEASE_YEAR$$', release_year);
+        let table_body = '';
+        release_list.forEach((Songs) => {
+            let table_row = '<tr>';
+            table_row += '<td>' + Songs.name + '</td>\n';
+            table_row += '<td>' + Songs.artists + '</td>\n';
+            table_row += '<td>' + Songs.year + '</td>\n';
+            table_row += '<td>' + Songs.dancability + '</td>\n';
+            table_row += '</tr>\n';
+            table_body += table_row;
+        });
+        response = response.replace('$$TABLE_BODY$$', table_body)
+        res.status(200).type('html').send(response);
+    //}).catch((error) => {
+        //res.status(404).type('txt').send('Sorry, that release year is not between 2000 and 2010');
+    });
 });
+
 
 app.listen(port, () => {
     console.log('Now listening on port ' + port);
