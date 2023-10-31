@@ -4,8 +4,6 @@ import * as url from 'node:url';
 
 import { default as express, response } from 'express';
 import { default as sqlite3 } from 'sqlite3';
-import { TIMEOUT } from 'node:dns';
-import res from 'express/lib/response';
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
