@@ -5,6 +5,7 @@ import * as url from 'node:url';
 import { default as express, response } from 'express';
 import { default as sqlite3 } from 'sqlite3';
 import { TIMEOUT } from 'node:dns';
+import res from 'express/lib/response';
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
@@ -79,7 +80,19 @@ app.get("", (req, res) => {
         res.status(200).type('html').send(response);
         });
     });
-})
+});
+
+app.get("/artist/:name", (req, res) => {
+    let name = req.params.name;
+});
+
+app.get("/dance/:score", (req, res) => {
+    let score = req.params.score;
+});
+
+app.get("/year/:release", (req, res) => {
+    let release = req.params.release;
+});
 
 app.listen(port, () => {
     console.log('Now listening on port ' + port);
