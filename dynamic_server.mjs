@@ -98,15 +98,16 @@ app.get("/artist/:name", (req, res) => {
 app.get("/dance/:score", (req, res) => {
     let score = req.params.score;
 });
+
 // START OF ACCESSING RELEASE YEAR TEMPLATE
 app.get("/year/:release", (req, res) => {
     let release = req.params.release;
     let p1 = dbSelect('SELECT * FROM songs WHERE year = ?', [release]);
     let p2 = fs.promises.readFile(path.join('templates', 'release_year.html'), 'utf-8');
     Promise.all([p1, p2]).then((results) => {
-        let release_year = results[1][0].name;
+        let release_year = release;
         let release_list = results[0];
-        let response = results[1].replace('$$RELEASE_YEAR$$', release_year);
+        let response = results[1].replace('$$RELEASE_YEAR$$', release_year).replace('$$RELEASE_YEAR$$', release_year);
         let table_body = '';
         release_list.forEach((Songs) => {
             let table_row = '<tr>';
