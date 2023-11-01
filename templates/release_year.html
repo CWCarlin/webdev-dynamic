@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" href="public/css/style.css"/>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <title> Songs from $$RELEASE_YEAR$$ </title>
     </head>
     <body>
-        <div class="cell small-12 large-12" style="background-color: rgba(203,203,203,0.8); font-size: 4vmax;
-                    margin-bottom: 0.5vw; padding: 0vw;">
-            <h1>Top Spotify Songs from $$RELEASE_YEAR$$</h1>
+        <a href="http://localhost:9000" target="_self">Return to Menu</a>
+        <div>
+            <h4>Top Spotify Songs from $$RELEASE_YEAR$$</h4>
         </div>
         <div class="grid-container">
             <div class="grid-x grid-padding-x">
@@ -30,5 +29,11 @@
                 $$TABLE_BODY$$
             </tbody>
         </table>
+
+        <!-- Script Tags -->
+        <script src="public/js/vendor/jquery.js"></script>
+        <script src="public/js/vendor/what-input.js"></script>
+        <script src="public/js/vendor/foundation.js"></script>
+        <script type="application/javascript">$(document).foundation();</script>
     </body>
 </html>

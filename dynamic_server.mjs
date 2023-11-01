@@ -76,7 +76,7 @@ app.get("", (req, res) => {
             year_table += '<tr><td><a href="year/' + y + '">' + y + "</a></td></tr>\n";
         });
 
-        dancability.forEach((dance) => {
+        danceability.forEach((dance) => {
             danceability_table += '<tr><td><a href="dance/' + dance + '">' + dance + "</a></tr></td>\n";
         })
 
@@ -84,7 +84,7 @@ app.get("", (req, res) => {
         let response = data
             .replace('$ARTISTS$', artists_table)
             .replace('$YEARS$', year_table)
-            .replace('$DANCABILITY$', danceability_table);
+            .replace('$DANCEABILITY$', danceability_table);
 
         res.status(200).type('html').send(response);
         });
@@ -110,23 +110,23 @@ app.get("/year/:release_year", (req, res) => {
         //Populate table
         let table_body = '';
         let release_list = results[0];
-        release_list.forEach((Songs) => {
+        release_list.forEach((song) => {
             let table_row = '<tr>';
-            table_row += '<td>' + Songs.name + '</td>\n';
-            table_row += '<td>' + Songs.artists + '</td>\n';
-            table_row += '<td>' + Songs.year + '</td>\n';
-            table_row += '<td>' + Songs.danceability + '</td>\n';
+            table_row += '<td>' + song.name + '</td>\n';
+            table_row += '<td>' + song.artists + '</td>\n';
+            table_row += '<td>' + song.year + '</td>\n';
+            table_row += '<td>' + song.danceability + '</td>\n';
             table_row += '</tr>\n';
             table_body += table_row;
         });
         response = response.replace('$$TABLE_BODY$$', table_body);
-        //Create a next link
+        //Create next link
         let next_year = parseInt(release_year) + 1;
         if (next_year === 2011) {next_year = 2001;}
         let next_text = "Go to songs from " + next_year;
         let next_address = "http://localhost:9000/year/" + next_year;
         response = response.replace('$$NEXT_TEXT$$', next_text).replace('$$NEXT_ADDRESS$$', next_address);
-        //Create a previous link
+        //Create previous link
         let prev_year = parseInt(release_year) - 1;
         if (prev_year === 2000) {prev_year = 2010;}
         let prev_text = "Go to songs from " + prev_year;
