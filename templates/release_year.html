@@ -7,19 +7,28 @@
         <title> Songs from $$RELEASE_YEAR$$ </title>
     </head>
     <body>
-        <h1>Top Spotify Songs from $$RELEASE_YEAR$$</h1>
-        <table>
+        <div class="cell small-12 large-12" style="background-color: rgba(203,203,203,0.8); font-size: 4vmax;
+                    margin-bottom: 0.5vw; padding: 0vw;">
+            <h1>Top Spotify Songs from $$RELEASE_YEAR$$</h1>
+        </div>
+        <div class="grid-container">
+            <div class="grid-x grid-padding-x">
+                <div class="cell large-6"><a href="$$PREV_ADDRESS$$" target="_self">$$PREV_TEXT$$</a></div>
+                <div class="cell large-6"><a href="$$NEXT_ADDRESS$$" target="_self">$$NEXT_TEXT$$</a></div>
+            </div>
+        </div>
+        <table style="border:1px solid black;margin-left:auto;margin-right:auto;border-spacing: 100px 2px;">
             <thead>
                 <tr>
                     <th>Song Title</th>
                     <th>Artist</th>
                     <th>Release Year</th>
-                    <th>Dancability Score</th>
+                    <th>Danceability Score</th>
                 </tr>
             </thead>
-        <tbody>
-        $$TABLE_BODY$$
-        </tbody>
-    </table>
-</body>
+            <tbody>
+                $$TABLE_BODY$$
+            </tbody>
+        </table>
+    </body>
 </html>

@@ -44,7 +44,7 @@ function dbSelect(query, params) {
 app.get("", (req, res) => {
     let artists = new Set();
     let year = new Set();
-    let dancability = new Set();
+    let danceability = new Set();
 
     let query = 'SELECT * FROM Songs';
 
@@ -55,18 +55,18 @@ app.get("", (req, res) => {
             rows.forEach((val) => {
                 artists.add(val.artists);
                 year.add(val.year);
-                dancability.add(val.dancability);
+                danceability.add(val.danceability);
             });
         }
 
     artists = Array.from(artists).sort();
     year = Array.from(year).sort();
-    dancability = Array.from(dancability).sort();
+    danceability = Array.from(danceability).sort();
 
     fs.readFile(path.join(template, "landing.html"), 'utf-8', (err, data) => {
         let artists_table = "";
         let year_table = "";
-        let dancability_table = "";
+        let danceability_table = "";
 
         artists.forEach((artist) => {
             artists_table += '<tr><td><a href="artist/' + artist + '">' + artist + "</a></td></tr>\n";
@@ -77,14 +77,14 @@ app.get("", (req, res) => {
         });
 
         dancability.forEach((dance) => {
-            dancability_table += '<tr><td><a href="dance/' + dance + '">' + dance + "</a></tr></td>\n";
+            danceability_table += '<tr><td><a href="dance/' + dance + '">' + dance + "</a></tr></td>\n";
         })
 
 
         let response = data
             .replace('$ARTISTS$', artists_table)
             .replace('$YEARS$', year_table)
-            .replace('$DANCABILITY$', dancability_table);
+            .replace('$DANCABILITY$', danceability_table);
 
         res.status(200).type('html').send(response);
         });
@@ -99,26 +99,40 @@ app.get("/dance/:score", (req, res) => {
     let score = req.params.score;
 });
 
-// START OF ACCESSING RELEASE YEAR TEMPLATE
-app.get("/year/:release", (req, res) => {
-    let release = req.params.release;
-    let p1 = dbSelect('SELECT * FROM songs WHERE year = ?', [release]);
+// START OF RELEASE YEAR TEMPLATE
+app.get("/year/:release_year", (req, res) => {
+    let release_year = req.params.release_year;
+    let p1 = dbSelect('SELECT * FROM songs WHERE year = ?', [release_year]);
     let p2 = fs.promises.readFile(path.join('templates', 'release_year.html'), 'utf-8');
     Promise.all([p1, p2]).then((results) => {
-        let release_year = release;
-        let release_list = results[0];
+        //Populate release year tags
         let response = results[1].replace('$$RELEASE_YEAR$$', release_year).replace('$$RELEASE_YEAR$$', release_year);
+        //Populate table
         let table_body = '';
+        let release_list = results[0];
         release_list.forEach((Songs) => {
             let table_row = '<tr>';
             table_row += '<td>' + Songs.name + '</td>\n';
             table_row += '<td>' + Songs.artists + '</td>\n';
             table_row += '<td>' + Songs.year + '</td>\n';
-            table_row += '<td>' + Songs.dancability + '</td>\n';
+            table_row += '<td>' + Songs.danceability + '</td>\n';
             table_row += '</tr>\n';
             table_body += table_row;
         });
-        response = response.replace('$$TABLE_BODY$$', table_body)
+        response = response.replace('$$TABLE_BODY$$', table_body);
+        //Create a next link
+        let next_year = parseInt(release_year) + 1;
+        if (next_year === 2011) {next_year = 2001;}
+        let next_text = "Go to songs from " + next_year;
+        let next_address = "http://localhost:9000/year/" + next_year;
+        response = response.replace('$$NEXT_TEXT$$', next_text).replace('$$NEXT_ADDRESS$$', next_address);
+        //Create a previous link
+        let prev_year = parseInt(release_year) - 1;
+        if (prev_year === 2000) {prev_year = 2010;}
+        let prev_text = "Go to songs from " + prev_year;
+        let prev_address = "http://localhost:9000/year/" + prev_year;
+        response = response.replace('$$PREV_TEXT$$', prev_text).replace('$$PREV_ADDRESS$$', prev_address);
+        //Send Response
         res.status(200).type('html').send(response);
     //}).catch((error) => {
         //res.status(404).type('txt').send('Sorry, that release year is not between 2000 and 2010');
