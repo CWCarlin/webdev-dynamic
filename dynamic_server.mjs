@@ -101,42 +101,49 @@ app.get("/dance/:score", (req, res) => {
 
 // START OF RELEASE YEAR TEMPLATE
 app.get("/year/:release_year", (req, res) => {
-    let release_year = req.params.release_year;
-    let p1 = dbSelect('SELECT * FROM songs WHERE year = ?', [release_year]);
-    let p2 = fs.promises.readFile(path.join('templates', 'release_year.html'), 'utf-8');
-    Promise.all([p1, p2]).then((results) => {
-        //Populate release year tags
-        let response = results[1].replace('$$RELEASE_YEAR$$', release_year).replace('$$RELEASE_YEAR$$', release_year);
-        //Populate table
-        let table_body = '';
-        let release_list = results[0];
-        release_list.forEach((song) => {
-            let table_row = '<tr>';
-            table_row += '<td>' + song.name + '</td>\n';
-            table_row += '<td>' + song.artists + '</td>\n';
-            table_row += '<td>' + song.year + '</td>\n';
-            table_row += '<td>' + song.danceability + '</td>\n';
-            table_row += '</tr>\n';
-            table_body += table_row;
-        });
-        response = response.replace('$$TABLE_BODY$$', table_body);
-        //Create next link
-        let next_year = parseInt(release_year) + 1;
-        if (next_year === 2011) {next_year = 2001;}
-        let next_text = "Go to songs from " + next_year;
-        let next_address = "http://localhost:9000/year/" + next_year;
-        response = response.replace('$$NEXT_TEXT$$', next_text).replace('$$NEXT_ADDRESS$$', next_address);
-        //Create previous link
-        let prev_year = parseInt(release_year) - 1;
-        if (prev_year === 2000) {prev_year = 2010;}
-        let prev_text = "Go to songs from " + prev_year;
-        let prev_address = "http://localhost:9000/year/" + prev_year;
-        response = response.replace('$$PREV_TEXT$$', prev_text).replace('$$PREV_ADDRESS$$', prev_address);
-        //Send Response
-        res.status(200).type('html').send(response);
-    //}).catch((error) => {
-        //res.status(404).type('txt').send('Sorry, that release year is not between 2000 and 2010');
-    });
+    try {
+        let release_year = req.params.release_year;
+        let input_year = parseInt(release_year);
+        if(input_year !== 2001 && input_year !== 2002 && input_year !== 2003 && input_year !== 2004 && input_year !== 2005 &&
+            input_year !== 2006 && input_year !== 2007 && input_year !== 2008 && input_year !== 2009 && input_year !== 2010)
+            throw release_year;
+        let p1 = dbSelect('SELECT * FROM songs WHERE year = ?', [release_year]);
+        let p2 = fs.promises.readFile(path.join('templates', 'release_year.html'), 'utf-8');
+        Promise.all([p1, p2]).then((results) => {
+            //Populate release year tags
+            let response = results[1].replace('$$RELEASE_YEAR$$', release_year).replace('$$RELEASE_YEAR$$', release_year);
+            //Populate table
+            let table_body = '';
+            let release_list = results[0];
+            release_list.forEach((song) => {
+                let table_row = '<tr>';
+                table_row += '<td>' + song.name + '</td>\n';
+                table_row += '<td>' + song.artists + '</td>\n';
+                table_row += '<td>' + song.year + '</td>\n';
+                table_row += '<td>' + song.danceability + '</td>\n';
+                table_row += '</tr>\n';
+                table_body += table_row;
+            });
+            response = response.replace('$$TABLE_BODY$$', table_body);
+            //Create next link
+            let next_year = input_year + 1;
+            if (next_year === 2011) {next_year = 2001;}
+            let next_text = "Go to songs from " + next_year;
+            let next_address = "http://localhost:9000/year/" + next_year;
+            response = response.replace('$$NEXT_TEXT$$', next_text).replace('$$NEXT_ADDRESS$$', next_address);
+            //Create previous link
+            let prev_year = input_year - 1;
+            if (prev_year === 2000) {prev_year = 2010;}
+            let prev_text = "Go to songs from " + prev_year;
+            let prev_address = "http://localhost:9000/year/" + prev_year;
+            response = response.replace('$$PREV_TEXT$$', prev_text).replace('$$PREV_ADDRESS$$', prev_address);
+            //Send Response
+            res.status(200).type('html').send(response);
+        })
+    }
+    catch(error) {
+        res.status(404).type('txt').send('Sorry, ' + error +  ' is not between 2000 and 2010');
+    }
 });
 
 
