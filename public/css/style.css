@@ -1,0 +1,46 @@
+body{
+    background: linear-gradient(120deg, #1db954, #191414);
+}
+h1{
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    font-size: 5vw;
+    margin-top: 1vw;
+    margin-bottom: 1vw;
+}
+h2{
+    color: white;
+    text-align: center;
+    font-size: 2vw;
+    margin-top: 1vw;
+    margin-bottom: 1vw;
+}
+#next_button {
+    font-size: 2.2vmax;
+    text-align: center;
+    margin-top: 0.5vw;
+    margin-bottom: 2vw;
+    padding: 1vw;
+}
+#prev_button {
+    font-size: 2.2vmax;
+    text-align: center;
+    margin-top: 0.5vw;
+    margin-bottom: 2vw;
+    padding: 1vw;
+}
+#menu_button {
+    font-size: 2.2vmax;
+    text-align: center;
+    margin-top: 0.5vw;
+    margin-bottom: 2vw;
+    padding: 1vw;
+}
+.link_button {
+    color: white;
+    text-decoration: underline;
+}
+.link_button:hover {
+    color:lightgray;
+}

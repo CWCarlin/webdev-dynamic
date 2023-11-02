@@ -128,12 +128,12 @@ app.get("/year/:release_year", (req, res) => {
             //Create next link
             let next_year = input_year + 1;
             if (next_year === 2011) {next_year = 2001;}
-            let next_address = "<a href=" + next_year + ">" + "Go to songs from " + next_year + "</a>";
+            let next_address = "<a class='link_button' href=" + next_year + ">" + "Go to songs from " + next_year + "</a>";
             response = response.replace('$$NEXT_ADDRESS$$', next_address);
             //Create previous link
             let prev_year = input_year - 1;
             if (prev_year === 2000) {prev_year = 2010;}
-            let prev_address = "<a href=" + prev_year + ">" + "Go to songs from " + prev_year + "</a>";
+            let prev_address = "<a class='link_button' href=" + prev_year + ">" + "Go to songs from " + prev_year + "</a>";
             response = response.replace('$$PREV_ADDRESS$$', prev_address);
             //Send Response
             res.status(200).type('html').send(response);

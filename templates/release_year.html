@@ -1,91 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html class="no-js" lang="en">
     <head>
         <meta charset="utf-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <link rel="stylesheet" href="public/css/foundation.css">
-        <link rel="stylesheet" href="public/css/style.css">
-        <script src="chart.min.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link type="text/css" rel="stylesheet" href="/css/foundation.css">
+        <link type="text/css" rel="stylesheet" href="/css/style.css">
         <title> Songs from $$RELEASE_YEAR$$ </title>
     </head>
     <body>
-    <div class="off-canvas-content" data-off-canvas-content>
-        <div class="grid-container">
-            <a href="https://cwcarlin-webdev-dynamic.onrender.com" target="_self">Return to Menu</a>
-            <div class="grid-x grid-padding-x">
-                <div class="cell small-12" style="text-align:center"><h1>Top Spotify Songs from $$RELEASE_YEAR$$</h1></div>
-            </div>
-        </div>
-
-        <div class="grid-container">
-            <div class="grid-x grid-padding-x">
-                <div class="cell small-12 large-6">
-                    $$PREV_ADDRESS$$
-                </div>
-                <div class="cell small-12 large-6">
-                    $$NEXT_ADDRESS$$
+        <div class="off-canvas-content" data-off-canvas-content>
+            <div class="grid-container">
+                <div class="grid-x grid-padding-x">
+                    <div class="cell small-12" style="text-align:center"><h1>Top Spotify Songs from $$RELEASE_YEAR$$</h1></div>
                 </div>
             </div>
-        </div>
-    </div>
-        <!-- Testing
-        <div class="grid-container">
-            <div class="grid-x grid-padding-x">
-                <div class="cell small-12 large-6" style="float:right">Artists</div>
-                <div class="cell small-12 large-6" style="float:left">Release Year</div>
+
+            <div class="grid-container">
+                <div class="grid-x grid-padding-x">
+                    <div id="prev_button" class="cell small-12 large-4">
+                        $$PREV_ADDRESS$$
+                    </div>
+                    <div id="menu_button" class="cell small-12 large-4">
+                        <a class="link_button" href="https://cwcarlin-webdev-dynamic.onrender.com" target="_self">Return to Menu</a>
+                    </div>
+                    <div id="next_button" class="cell small-12 large-4">
+                        $$NEXT_ADDRESS$$
+                    </div>
+                </div>
             </div>
         </div>
-        -->
 
-        <div>
-            <canvas id="myChart"></canvas>
-        </div>
-
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-        <script>
-            import {Chart} from "chart.js";
-
-            const ctx = document.getElementById('myChart');
-
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                    datasets: [{
-                        label: '# of Votes',
-                        data: [12, 19, 3, 5, 2, 3],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        </script>
 
         <table style="border:1px solid black;margin-left:auto;margin-right:auto;border-spacing: 100px 2px;">
             <thead>
-                <tr>
-                    <th>Song Title</th>
-                    <th>Artist</th>
-                    <th>Release Year</th>
-                    <th>Danceability Score</th>
-                </tr>
+            <tr>
+                <th>Song Title</th>
+                <th>Artist</th>
+                <th>Release Year</th>
+                <th>Danceability Score</th>
+            </tr>
             </thead>
             <tbody>
-                $$TABLE_BODY$$
+            $$TABLE_BODY$$
             </tbody>
         </table>
 
         <!-- Script Tags -->
-        <script src="public/js/vendor/jquery.js"></script>
-        <script src="public/js/vendor/what-input.js"></script>
-        <script src="public/js/vendor/foundation.js"></script>
+        <script src="/js/vendor/jquery.js"></script>
+        <script src="/js/vendor/what-input.js"></script>
+        <script src="/js/vendor/foundation.js"></script>
         <script type="application/javascript">
             $(document).foundation();
         </script>
