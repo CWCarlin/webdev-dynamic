@@ -7,7 +7,7 @@ import { default as sqlite3 } from 'sqlite3';
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
-const port = 9000;
+const port = 443;
 const root = path.join(__dirname, 'public');
 const template = path.join(__dirname, 'templates');
 
