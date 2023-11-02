@@ -101,6 +101,7 @@ app.get("/dance/:score", (req, res) => {
 
 // START OF RELEASE YEAR TEMPLATE
 app.get("/year/:release_year", (req, res) => {
+    //START FILLING WEBPAGE
     try {
         let release_year = req.params.release_year;
         let input_year = parseInt(release_year);
@@ -135,6 +136,26 @@ app.get("/year/:release_year", (req, res) => {
             if (prev_year === 2000) {prev_year = 2010;}
             let prev_address = "<a class='link_button' href=" + prev_year + ">" + "Go to songs from " + prev_year + "</a>";
             response = response.replace('$$PREV_ADDRESS$$', prev_address);
+            //Populate chart data
+            let x1=0, x2=0, x3=0, x4=0, x5=0, x6=0, x7=0, x8=0, x9=0, x10=0, x11=0;
+            release_list.forEach((song) => {
+                //console.log(song.danceability);
+                if (song.danceability === "0") { x1 = x1 + 1}
+                else if (song.danceability === "0.1") { x2 = x2 + 1}
+                else if (song.danceability === "0.2") { x3 = x3 + 1}
+                else if (song.danceability === "0.3") { x4 = x4 + 1}
+                else if (song.danceability === "0.4") { x5 = x5 + 1}
+                else if (song.danceability === "0.5") { x6 = x6 + 1}
+                else if (song.danceability === "0.6") { x7 = x7 + 1}
+                else if (song.danceability === "0.7") { x8 = x8 + 1}
+                else if (song.danceability === "0.8") { x9 = x9 + 1}
+                else if (song.danceability === "0.9") { x10 = x10 + 1}
+                else { x11 = x11 + 1}
+                console.log(x7);
+            });
+            response = response.replace('$$x1$$', x1).replace('$$x2$$', x2).replace('$$x3$$', x3).replace('$$x4$$', x4)
+                .replace('$$x5$$', x5).replace('$$x6$$', x6).replace('$$x7$$', x7).replace('$$x8$$', x8)
+                .replace('$$x9$$', x9).replace('$$x10$$', x10).replace('$$x11$$', x11);
             //Send Response
             res.status(200).type('html').send(response);
         })

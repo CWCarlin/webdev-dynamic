@@ -5,9 +5,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link type="text/css" rel="stylesheet" href="/css/foundation.css">
         <link type="text/css" rel="stylesheet" href="/css/style.css">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <title> Songs from $$RELEASE_YEAR$$ </title>
     </head>
     <body>
+    <!-- SET UP TITLE AND NAVIGATION BUTTONS -->
         <div class="off-canvas-content" data-off-canvas-content>
             <div class="grid-container">
                 <div class="grid-x grid-padding-x">
@@ -31,13 +33,65 @@
         </div>
 
 
-        <table style="border:1px solid black;margin-left:auto;margin-right:auto;border-spacing: 100px 2px;">
+
+    <!-- START OF CHART MAKING -->
+        <div class="chart-container" style="position: relative; height:85vh; width:100vw">
+            <canvas id="myChart">
+                <script>
+                    const ctx = document.getElementById('myChart');
+                    const plugin = {
+                        id: 'customCanvasBackgroundColor',
+                        beforeDraw: (chart, args, options) => {
+                            const {ctx} = chart;
+                            ctx.save();
+                            ctx.globalCompositeOperation = 'destination-over';
+                            ctx.fillStyle = options.color || '#99ffff';
+                            ctx.fillRect(0, 0, chart.width, chart.height);
+                            ctx.restore();
+                        }
+                    };
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['0', '0.1', '0.2', '0.3', '0.4', '0.5', '0.6', '0.7', '0.8', '0.9', '1'],
+                            datasets: [{
+                                label: 'Danceability Rating Distribution',
+                                data: [$$x1$$,$$x2$$,$$x3$$,$$x4$$,$$x5$$,$$x6$$,$$x7$$,$$x8$$,$$x9$$,$$x10$$,$$x11$$],
+                                borderWidth: 1,
+                                backgroundColor: '#1db954',
+                            }]
+                        },
+                        options: {
+                            layout: { padding: 20 },
+                            maintainAspectRatio: false,
+                            scales: { y: {beginAtZero: true} },
+                            plugins: {
+                                customCanvasBackgroundColor: {color: 'white'},
+                                legend: {
+                                    labels: {
+                                        color: 'black',
+                                        font: {
+                                            size: 25,
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        plugins: [plugin],
+                    });
+                </script>
+            </canvas>
+        </div>
+    <!-- END OF CHART MAKING -->
+
+    <!-- FILL TABLE -->
+        <table>
             <thead>
             <tr>
                 <th>Song Title</th>
                 <th>Artist</th>
                 <th>Release Year</th>
-                <th>Danceability Score</th>
+                <th>Danceability Rating</th>
             </tr>
             </thead>
             <tbody>
