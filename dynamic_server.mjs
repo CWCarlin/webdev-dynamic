@@ -113,10 +113,28 @@ app.get("/artist/:name", (req, res) => {
             let artist_index = artist_names.findIndex(equals);
 
             let prev_artist_name = artist_names[(artist_index + artist_names.length - 1) % artist_names.length];
+            let prev_link = "";
             let next_artist_name = artist_names[(artist_index + artist_names.length + 1) % artist_names.length];
+            let next_link = "";
 
-            let previous = "<a class='link_button' href=" + prev_artist_name.replaceAll(" ", "%20") + ">" + "Go to songs from " + prev_artist_name + "</a>";
-            let next = "<a class='link_button' href=" + next_artist_name.replaceAll(" ", "%20") + ">" + "Go to songs from " + next_artist_name + "</a>";
+            for (let i = 0; i < prev_artist_name.length; i++) {
+                if (prev_artist_name.charAt(i) == " ") {
+                    prev_link += "%20";
+                } else {
+                    prev_link += prev_artist_name.charAt(i);
+                }
+            };
+
+            for (let i = 0; i < next_artist_name.length; i++) {
+                if (next_artist_name.charAt(i) == " ") {
+                    next_link += "%20";
+                } else {
+                    next_link += next_artist_name.charAt(i);
+                }
+            };
+
+            let previous = "<a class='link_button' href=" + prev_link + ">" + "Go to songs from " + prev_artist_name + "</a>";
+            let next = "<a class='link_button' href=" + next_link + ">" + "Go to songs from " + next_artist_name + "</a>";
 
             let table = "";
             let x2001 = [0, 0];
