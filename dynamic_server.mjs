@@ -139,7 +139,7 @@ app.get("/year/:release_year", (req, res) => {
             //Load in image of most popular song of the year
             let first_song = results[0][0];
             let picture_id = first_song.id;
-            response = response.replace('$$PICTURE_ID$$', picture_id);
+            response = response.replace('$$PICTURE_ID$$', picture_id).replace('$$RELEASE_YEAR$$', release_year);
             //Populate chart data
             let x1=0, x2=0, x3=0, x4=0, x5=0, x6=0, x7=0, x8=0, x9=0, x10=0, x11=0;
             release_list.forEach((song) => {
