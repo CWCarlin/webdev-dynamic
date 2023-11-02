@@ -136,10 +136,13 @@ app.get("/year/:release_year", (req, res) => {
             if (prev_year === 2000) {prev_year = 2010;}
             let prev_address = "<a class='link_button' href=" + prev_year + ">" + "Go to songs from " + prev_year + "</a>";
             response = response.replace('$$PREV_ADDRESS$$', prev_address);
+            //Load in image of most popular song of the year
+            let first_song = results[0][0];
+            let picture_id = first_song.id;
+            response = response.replace('$$PICTURE_ID$$', picture_id);
             //Populate chart data
             let x1=0, x2=0, x3=0, x4=0, x5=0, x6=0, x7=0, x8=0, x9=0, x10=0, x11=0;
             release_list.forEach((song) => {
-                //console.log(song.danceability);
                 if (song.danceability === "0") { x1 = x1 + 1}
                 else if (song.danceability === "0.1") { x2 = x2 + 1}
                 else if (song.danceability === "0.2") { x3 = x3 + 1}
@@ -151,7 +154,6 @@ app.get("/year/:release_year", (req, res) => {
                 else if (song.danceability === "0.8") { x9 = x9 + 1}
                 else if (song.danceability === "0.9") { x10 = x10 + 1}
                 else { x11 = x11 + 1}
-                console.log(x7);
             });
             response = response.replace('$$x1$$', x1).replace('$$x2$$', x2).replace('$$x3$$', x3).replace('$$x4$$', x4)
                 .replace('$$x5$$', x5).replace('$$x6$$', x6).replace('$$x7$$', x7).replace('$$x8$$', x8)
