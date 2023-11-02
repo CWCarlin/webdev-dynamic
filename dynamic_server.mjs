@@ -93,6 +93,113 @@ app.get("", (req, res) => {
 
 app.get("/artist/:name", (req, res) => {
     let name = req.params.name;
+    let artist_data_query = dbSelect('SELECT * FROM Songs WHERE artists = ?', [name]);
+    let artists_query = dbSelect("SELECT artists FROM Songs");
+    let read_file = fs.promises.readFile(path.join('templates', 'artist.html'), 'utf-8');
+
+    Promise.all([artist_data_query, artists_query, read_file]).then((results) => {
+        if (results[0].length == 0) {
+            res.status(404).type('txt').send('Sorry, "' + name +  '" is not an artists within this dataset');
+        } else {
+            let artist_data = results[0];
+            let artist_names = new Set();
+
+            results[1].forEach((a) => {
+                artist_names.add(a.artists);
+            });
+
+            artist_names = Array.from(artist_names).sort();
+            const equals = (e) => e == name;
+            let artist_index = artist_names.findIndex(equals);
+
+            let prev_artist_name = artist_names[(artist_index + artist_names.length - 1) % artist_names.length];
+            let next_artist_name = artist_names[(artist_index + artist_names.length + 1) % artist_names.length];
+
+            let previous = "<a class='link_button' href=" + prev_artist_name.replaceAll(" ", "%20") + ">" + "Go to songs from " + prev_artist_name + "</a>";
+            let next = "<a class='link_button' href=" + next_artist_name.replaceAll(" ", "%20") + ">" + "Go to songs from " + next_artist_name + "</a>";
+
+            let table = "";
+            let x2001 = [0, 0];
+            let x2002 = [0, 0];
+            let x2003 = [0, 0];
+            let x2004 = [0, 0];
+            let x2005 = [0, 0];
+            let x2006 = [0, 0];
+            let x2007 = [0, 0];
+            let x2008 = [0, 0];
+            let x2009 = [0, 0];
+            let x2010 = [0, 0];
+            artist_data.forEach((e) => {
+                if (e.year == 2001) {
+                    x2001[0] += parseFloat(e.danceability);
+                    x2001[1] += 1;
+                } else if (e.year == 2002) {
+                    x2002[0] += parseFloat(e.danceability);
+                    x2002[1] += 1;
+                } else if (e.year == 2003) {
+                    x2003[0] += parseFloat(e.danceability);
+                    x2003[1] += 1;
+                } else if (e.year == 2004) {
+                    x2004[0] += parseFloat(e.danceability);
+                    x2004[1] += 1;
+                } else if (e.year == 2005) {
+                    x2005[0] += parseFloat(e.danceability);
+                    x2005[1] += 1;
+                } else if (e.year == 2006) {
+                    x2006[0] += parseFloat(e.danceability);
+                    x2006[1] += 1;
+                } else if (e.year == 2007) {
+                    x2007[0] += parseFloat(e.danceability);
+                    x2007[1] += 1;
+                } else if (e.year == 2008) {
+                    x2008[0] += parseFloat(e.danceability);
+                    x2008[1] += 1;
+                } else if (e.year == 2009) {
+                    x2009[0] += parseFloat(e.danceability);
+                    x2009[1] += 1;
+                } else if (e.year == 2010) {
+                    x2010[0] += parseFloat(e.danceability);
+                    x2010[1] += 1;
+                }
+
+                let table_row = "<tr>";
+                table_row += "<td>" + e.name + "</td>\n";
+                table_row += "<td>" + e.year + "</td>\n";
+                table_row += "<td>" + e.danceability + "</td>\n";
+                table_row += "</tr>\n";
+                table += table_row;
+            });
+
+            if (x2001[1] != 0) {x2001[0] /= x2001[1]};
+            if (x2002[1] != 0) {x2002[0] /= x2002[1]};
+            if (x2003[1] != 0) {x2003[0] /= x2003[1]};
+            if (x2004[1] != 0) {x2004[0] /= x2004[1]};
+            if (x2005[1] != 0) {x2005[0] /= x2005[1]};
+            if (x2006[1] != 0) {x2006[0] /= x2006[1]};
+            if (x2007[1] != 0) {x2007[0] /= x2007[1]};
+            if (x2008[1] != 0) {x2008[0] /= x2008[1]};
+            if (x2009[1] != 0) {x2009[0] /= x2009[1]};
+            if (x2010[1] != 0) {x2010[0] /= x2010[1]};
+
+            let response = results[2]
+                .replace("$$ARTIST$$", name)
+                .replace("$$ARTIST$$", name)
+                .replace("$$PREV_ADDRESS$$", previous)
+                .replace("$$NEXT_ADDRESS$$", next)
+                .replace("$$x1$$", x2001[0])
+                .replace("$$x2$$", x2002[0])
+                .replace("$$x3$$", x2003[0])
+                .replace("$$x4$$", x2004[0])
+                .replace("$$x5$$", x2005[0])
+                .replace("$$x6$$", x2006[0])
+                .replace("$$x7$$", x2007[0])
+                .replace("$$x8$$", x2008[0])
+                .replace("$$x9$$", x2009[0])
+                .replace("$$x10$$", x2010[0])
+                .replace("$$TABLE_BODY$$", table);
+            res.status(200).type('html').send(response);
+        }
+    });
 });
 
 app.get("/dance/:score", (req, res) => {
