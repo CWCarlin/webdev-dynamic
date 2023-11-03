@@ -303,7 +303,7 @@ app.get("/dance/:score", (req, res) => {
         let p2 = fs.promises.readFile(path.join('templates', 'danceability.html'), 'utf-8');
         Promise.all([p1, p2]).then((results) => {
             //Populate tags
-            let response = results[1].replace('$$DANCEABILITY$$', score).replace('$$DANCEABILITY$$', score);
+            let response = results[1].replace('$$SCORE$$', score).replace('$$SCORE$$', score);
             //Populate table
             let table_body = '';
             let dance_list = results[0];
@@ -330,7 +330,7 @@ app.get("/dance/:score", (req, res) => {
 
             let first_song = results[0][0];
             let picture_id = first_song.id;
-            response = response.replace('$$PICTURE_ID_D$$', picture_id).replace('$$DANCEABILITY$$', dance);
+            response = response.replace('$$PICTURE_ID_D$$', picture_id).replace('$$SCORE$$', score);
             //Send Response
             res.status(200).type('html').send(response);
         })
