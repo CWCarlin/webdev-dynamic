@@ -220,9 +220,9 @@ app.get("/artist/:name", (req, res) => {
     });
 });
 
-app.get("/dance/:score", (req, res) => {
-    let score = req.params.score;
-});
+//app.get("/dance/:score", (req, res) => {
+//    let score = req.params.score;
+//});
 
 // START OF RELEASE YEAR TEMPLATE
 app.get("/year/:release_year", (req, res) => {
@@ -289,6 +289,54 @@ app.get("/year/:release_year", (req, res) => {
     }
     catch(error) {
         res.status(404).type('txt').send('Sorry, ' + error +  ' is not between 2000 and 2010');
+    }
+});
+
+app.get("/dance/:score", (req, res) => {
+    try {
+        let score = req.params.score;
+        let input = parseFloat(score);
+        if(input !== 0.1 && input !== 0.2 && input !== 0.3 && input !== 0.4 && input !== 0.5 &&
+            input !== 0.6 && input !== 0.7 && input !== 0.8 && input !== 0.9 && input !== 1.0)
+            throw score;
+        let p1 = dbSelect('SELECT * FROM songs WHERE danceability = ?', [score]);
+        let p2 = fs.promises.readFile(path.join('templates', 'danceability.html'), 'utf-8');
+        Promise.all([p1, p2]).then((results) => {
+            //Populate tags
+            let response = results[1].replace('$$DANCEABILITY$$', score).replace('$$DANCEABILITY$$', score);
+            //Populate table
+            let table_body = '';
+            let dance_list = results[0];
+            dance_list.forEach((song) => {
+                let table_row = '<tr>';
+                table_row += '<td>' + song.name + '</td>\n';
+                table_row += '<td>' + song.artists + '</td>\n';
+                table_row += '<td>' + song.year + '</td>\n';
+                table_row += '<td>' + song.danceability + '</td>\n';
+                table_row += '</tr>\n';
+                table_body += table_row;
+            });
+            response = response.replace('$$TABLE_BODY_D$$', table_body);
+            //Create next link
+            let next_dance = input + 0.1;
+            if (next_dance === 1.1) {next_dance = 0.1;}
+            let next_address = "<a class='link_button' href=" + next_dance + ">" + "Go to songs with " + next_dance + " danceability</a>";
+            response = response.replace('$$NEXT_ADDRESS_D$$', next_address);
+            //Create previous link
+            let prev_dance = input - 0.1;
+            if (prev_dance === 0.0) {prev_dance = 1.0;}
+            let prev_address = "<a class='link_button' href=" + prev_dance + ">" + "Go to songs with " + prev_dance + " danceability</a>";
+            response = response.replace('$$PREV_ADDRESS_D$$', prev_address);
+
+            let first_song = results[0][0];
+            let picture_id = first_song.id;
+            response = response.replace('$$PICTURE_ID_D$$', picture_id).replace('$$DANCEABILITY$$', dance);
+            //Send Response
+            res.status(200).type('html').send(response);
+        })
+    }
+    catch(error) {
+        res.status(404).type('txt').send('Sorry, ' + error +  ' is not between 0.1 and 1.0');
     }
 });
 
